@@ -1,8 +1,10 @@
-﻿using MediatR;
+﻿using Application.HandlersApplication;
+using MediatR;
 using Persistence.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,8 +30,8 @@ namespace Application.CoursesFeatures.Commands
 
             if (courseExist == null)
             {
-                throw new Exception("Course don't exist!");
-            }
+                throw new HandlerExceptions(HttpStatusCode.NotFound, new { message = "Course don't exist!" });
+                }
 
             _coursesContext.Courses.Remove(courseExist);
             var resp = await _coursesContext.SaveChangesAsync();

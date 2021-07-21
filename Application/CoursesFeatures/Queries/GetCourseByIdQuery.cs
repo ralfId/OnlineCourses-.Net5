@@ -1,9 +1,11 @@
-﻿using Domain.Models;
+﻿using Application.HandlersApplication;
+using Domain.Models;
 using MediatR;
 using Persistence.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,7 +27,14 @@ namespace Application.CoursesFeatures.Queries
         }
         public async Task<Courses> Handle(GetCourseByIdQuery request, CancellationToken cancellationToken)
         {
-            return await _coursesContext.Courses.FindAsync(request.Id);
+            var course = await _coursesContext.Courses.FindAsync(request.Id);
+
+            if (course == null)
+            {
+                throw new HandlerExceptions(HttpStatusCode.NotFound, new { message = "The course not found" });
+            }
+
+            return course;
         }
     }
 }

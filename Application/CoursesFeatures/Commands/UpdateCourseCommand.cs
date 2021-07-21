@@ -1,9 +1,11 @@
-﻿using Domain.Models;
+﻿using Application.HandlersApplication;
+using Domain.Models;
 using MediatR;
 using Persistence.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,7 +34,7 @@ namespace Application.CoursesFeatures.Commands
             var courseExist = await _coursesContext.Courses.FindAsync(request.Id);
             if (courseExist == null)
             {
-                throw new Exception("Course don't exist");
+                throw new HandlerExceptions(HttpStatusCode.NoContent, new { message = "Course not found"});
             }
 
 

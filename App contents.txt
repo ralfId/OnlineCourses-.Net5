@@ -1,0 +1,2 @@
+-use of Onion arquitecture
+-use cqrs and MediatR 
