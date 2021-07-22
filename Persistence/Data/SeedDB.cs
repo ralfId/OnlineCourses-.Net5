@@ -22,7 +22,7 @@ namespace Persistence.Data
                     Email = "ralf_raid@yopmail.com"
                 };
 
-                await userManager.CreateAsync(user, "1234@ASD");
+                await userManager.CreateAsync(user, "Password@123");
 
             }
         }
