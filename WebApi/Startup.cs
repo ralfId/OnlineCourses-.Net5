@@ -1,9 +1,11 @@
 using Application.CoursesFeatures.Commands;
 using Application.CoursesFeatures.Queries;
+using Domain.Models;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,6 +37,13 @@ namespace WebApi
             services.AddMediatR(typeof(GetAllCoursesQuery).Assembly);
             services.AddControllers().AddFluentValidation(
                 config => config.RegisterValidatorsFromAssemblyContaining<CreateCourseCommand>());
+
+            //config CoreIdentity
+            var builder = services.AddIdentityCore<Users>();
+            var identityBuilder = new IdentityBuilder(builder.UserType, builder.Services);
+            identityBuilder.AddEntityFrameworkStores<OnlineCoursesContext>();
+            identityBuilder.AddSignInManager<SignInManager<Users>>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApi", Version = "v1" });
