@@ -12,38 +12,33 @@ namespace WebApi.Controllers
 {
     [Route("api/[Controller]")]
     [ApiController]
-    public class CoursesController : ControllerBase
+    public class CoursesController : ApiControllerBase
     {
-        private readonly IMediator _mediator;
-
-        public CoursesController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
+        
 
         [HttpGet]
         public async Task<ActionResult<List<Courses>>> GetAll()
         {
-            return await _mediator.Send(new GetAllCoursesQuery());
+            return await Mediator.Send(new GetAllCoursesQuery());
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Courses>> CourseById(int Id)
         {
-            return await _mediator.Send(new GetCourseByIdQuery{ Id = Id});
+            return await Mediator.Send(new GetCourseByIdQuery{ Id = Id});
         }
 
         [HttpPost]
         public async Task<ActionResult<Unit>> CreateCourse(CreateCourseCommand course)
         {
-            return await _mediator.Send(course);
+            return await Mediator.Send(course);
         }
 
         [HttpPut("{id}")]
         public async Task<ActionResult<Unit>> UpdateCourse(int Id, UpdateCourseCommand course)
         {
             course.Id = Id;
-            return await _mediator.Send(course);
+            return await Mediator.Send(course);
         }
 
         [HttpDelete("{id}")]

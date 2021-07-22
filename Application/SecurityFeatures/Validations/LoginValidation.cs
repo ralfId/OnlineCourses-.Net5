@@ -1,5 +1,4 @@
 ﻿using Application.SecurityFeatures.Commands;
-using Domain.Models;
 using FluentValidation;
 
 namespace Application.SecurityFeatures.Validations
