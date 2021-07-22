@@ -1,5 +1,6 @@
 ﻿
 using Domain.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Persistence.Data
 {
-    public class OnlineCoursesContext : DbContext
+    public class OnlineCoursesContext : IdentityDbContext
     {
         public OnlineCoursesContext(DbContextOptions options) : base(options) 
         {
@@ -23,6 +24,7 @@ namespace Persistence.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Courses>()
                 .HasOne(p => p.Prices)
                 .WithOne(c => c.Courses)
