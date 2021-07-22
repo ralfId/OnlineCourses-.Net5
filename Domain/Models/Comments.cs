@@ -10,11 +10,11 @@ namespace Domain.Models
     public class Comments
     {
         [Key]
-        public int CommentId { get; set; }
+        public Guid CommentId { get; set; }
         public string Student { get; set; }
         public int Score { get; set; }
         public string CommentText { get; set; }
-        public int CourseId { get; set; }
+        public Guid CourseId { get; set; }
         public Courses Course { get; set; }
     }
 }
