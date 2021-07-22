@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Persistence.Data
 {
-    public class OnlineCoursesContext : IdentityDbContext
+    public class OnlineCoursesContext : IdentityDbContext<Users>
     {
         public OnlineCoursesContext(DbContextOptions options) : base(options) 
         {

@@ -3,12 +3,14 @@ using Application.CoursesFeatures.Queries;
 using Domain.Models;
 using FluentValidation.AspNetCore;
 using MediatR;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Persistence.Data;
@@ -43,6 +45,8 @@ namespace WebApi
             var identityBuilder = new IdentityBuilder(builder.UserType, builder.Services);
             identityBuilder.AddEntityFrameworkStores<OnlineCoursesContext>();
             identityBuilder.AddSignInManager<SignInManager<Users>>();
+
+            services.TryAddSingleton<ISystemClock, SystemClock>();
 
             services.AddSwaggerGen(c =>
             {
