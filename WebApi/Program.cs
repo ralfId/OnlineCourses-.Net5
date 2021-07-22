@@ -34,7 +34,7 @@ namespace WebApi
                 }
             }
 
-            hostbuilder.Run();
+            hostbuilder.Run();  
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
