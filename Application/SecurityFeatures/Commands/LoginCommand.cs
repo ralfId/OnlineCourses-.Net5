@@ -1,4 +1,5 @@
-﻿using Application.HandlersApplication;
+﻿using Application.Contracts;
+using Application.HandlersApplication;
 using Application.ResponseModels;
 using Domain.Models;
 using MediatR;
@@ -19,11 +20,16 @@ namespace Application.SecurityFeatures.Commands
     {
         private readonly UserManager<Users> _userManager;
         private readonly SignInManager<Users> _signInManager;
+        private readonly IJwtGenerator _jwtGenerator;
 
-        public LoginCommandHandler(UserManager<Users> userManager, SignInManager<Users> signInManager)
+        public LoginCommandHandler(
+            UserManager<Users> userManager, 
+            SignInManager<Users> signInManager, 
+            IJwtGenerator jwtGenerator)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _jwtGenerator = jwtGenerator;
         }
         public async Task<UserData> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
@@ -47,7 +53,7 @@ namespace Application.SecurityFeatures.Commands
                 LastName = user.LastName,
                 UserName = user.UserName,
                 Email = user.Email,
-                Token = "this will be a user token",
+                Token = _jwtGenerator.CreateToken(user),
                 Image = null
             };
         }
