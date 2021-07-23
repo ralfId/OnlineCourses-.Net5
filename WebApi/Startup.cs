@@ -1,3 +1,4 @@
+using Application.Contracts;
 using Application.CoursesFeatures.Commands;
 using Application.CoursesFeatures.Queries;
 using Domain.Models;
@@ -14,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Persistence.Data;
+using Security.TokenSecurity;
 using System.Reflection;
 using WebApi.Middlewares;
 
@@ -52,6 +54,8 @@ namespace WebApi
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApi", Version = "v1" });
             });
+
+            services.AddScoped<IJwtGenerator, JwtGenerator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
