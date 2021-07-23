@@ -2,6 +2,7 @@
 using Application.CoursesFeatures.Queries;
 using Domain.Models;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ namespace WebApi.Controllers
         
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<List<Courses>>> GetAll()
         {
             return await Mediator.Send(new GetAllCoursesQuery());
