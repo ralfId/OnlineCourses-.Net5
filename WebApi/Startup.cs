@@ -6,9 +6,11 @@ using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,8 +44,13 @@ namespace WebApi
             });
 
             services.AddMediatR(typeof(GetAllCoursesQuery).Assembly);
-            services.AddControllers().AddFluentValidation(
-                config => config.RegisterValidatorsFromAssemblyContaining<CreateCourseCommand>());
+            services.AddControllers(opt =>
+           {
+               //adds security to all endpoints and request a token for requests
+               var JwtRule = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+               opt.Filters.Add(new AuthorizeFilter(JwtRule));
+           })
+                .AddFluentValidation(config => config.RegisterValidatorsFromAssemblyContaining<CreateCourseCommand>());
 
             //config CoreIdentity
             var builder = services.AddIdentityCore<Users>();
@@ -84,7 +91,7 @@ namespace WebApi
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApi v1"));
             }
-
+            //set to use Jwt security
             app.UseAuthentication();
 
             app.UseHttpsRedirection();
