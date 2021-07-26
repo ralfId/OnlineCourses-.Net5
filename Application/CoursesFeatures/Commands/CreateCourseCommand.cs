@@ -15,6 +15,7 @@ namespace Application.CoursesFeatures.Commands
         public string Title { get; set; }
         public string Description { get; set; }
         public DateTime PublicationDate { get; set; }
+        public List<Guid> InstructorList { get; set; }
 
     }
 
@@ -30,13 +31,29 @@ namespace Application.CoursesFeatures.Commands
         {
             var course = new Courses
             {
+                CourseId = Guid.NewGuid(),
                 Title = request.Title,
                 Description = request.Description,
                 PublicationDate = request.PublicationDate
             };
 
             _coursesContext.Courses.Add(course);
+
+            if (request.InstructorList != null)
+            {
+                request.InstructorList.ForEach(ci =>
+                {
+                    var coursInst = new CourseInstructor
+                    {
+                        CourseId = course.CourseId,
+                        InstructorId = ci
+                    };
+                    _coursesContext.CourseInstructor.Add(coursInst);
+                });
+            }
+
             var resp = await _coursesContext.SaveChangesAsync();
+
             if (resp > 0)
             {
                 return Unit.Value;
