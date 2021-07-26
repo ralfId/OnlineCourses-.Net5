@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Persistence.Migrations
 {
-    public partial class InitialIdentityCore : Migration
+    public partial class AddCousrseInstructorRelation : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -71,7 +71,8 @@ namespace Persistence.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Lastname = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Degree = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ProfilePhoto = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
+                    ProfilePhoto = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    CourseId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -226,24 +227,24 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CoursesInstructors",
+                name: "CourseInstructor",
                 columns: table => new
                 {
-                    CoursesListCourseId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    InstructorsListInstructorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    CourseId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    InstructorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CoursesInstructors", x => new { x.CoursesListCourseId, x.InstructorsListInstructorId });
+                    table.PrimaryKey("PK_CourseInstructor", x => new { x.InstructorId, x.CourseId });
                     table.ForeignKey(
-                        name: "FK_CoursesInstructors_Courses_CoursesListCourseId",
-                        column: x => x.CoursesListCourseId,
+                        name: "FK_CourseInstructor_Courses_CourseId",
+                        column: x => x.CourseId,
                         principalTable: "Courses",
                         principalColumn: "CourseId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CoursesInstructors_Instructors_InstructorsListInstructorId",
-                        column: x => x.InstructorsListInstructorId,
+                        name: "FK_CourseInstructor_Instructors_InstructorId",
+                        column: x => x.InstructorId,
                         principalTable: "Instructors",
                         principalColumn: "InstructorId",
                         onDelete: ReferentialAction.Cascade);
@@ -294,9 +295,9 @@ namespace Persistence.Migrations
                 column: "CourseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CoursesInstructors_InstructorsListInstructorId",
-                table: "CoursesInstructors",
-                column: "InstructorsListInstructorId");
+                name: "IX_CourseInstructor_CourseId",
+                table: "CourseInstructor",
+                column: "CourseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Prices_CourseId",
@@ -326,7 +327,7 @@ namespace Persistence.Migrations
                 name: "Comments");
 
             migrationBuilder.DropTable(
-                name: "CoursesInstructors");
+                name: "CourseInstructor");
 
             migrationBuilder.DropTable(
                 name: "Prices");

@@ -19,21 +19,6 @@ namespace Persistence.Migrations
                 .HasAnnotation("ProductVersion", "5.0.8")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("CoursesInstructors", b =>
-                {
-                    b.Property<Guid>("CoursesListCourseId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("InstructorsListInstructorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("CoursesListCourseId", "InstructorsListInstructorId");
-
-                    b.HasIndex("InstructorsListInstructorId");
-
-                    b.ToTable("CoursesInstructors");
-                });
-
             modelBuilder.Entity("Domain.Models.Comments", b =>
                 {
                     b.Property<Guid>("CommentId")
@@ -57,6 +42,21 @@ namespace Persistence.Migrations
                     b.HasIndex("CourseId");
 
                     b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("Domain.Models.CourseInstructor", b =>
+                {
+                    b.Property<Guid>("InstructorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CourseId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("InstructorId", "CourseId");
+
+                    b.HasIndex("CourseId");
+
+                    b.ToTable("CourseInstructor");
                 });
 
             modelBuilder.Entity("Domain.Models.Courses", b =>
@@ -86,6 +86,9 @@ namespace Persistence.Migrations
                 {
                     b.Property<Guid>("InstructorId")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CourseId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Degree")
@@ -330,30 +333,34 @@ namespace Persistence.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("CoursesInstructors", b =>
-                {
-                    b.HasOne("Domain.Models.Courses", null)
-                        .WithMany()
-                        .HasForeignKey("CoursesListCourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Models.Instructors", null)
-                        .WithMany()
-                        .HasForeignKey("InstructorsListInstructorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Domain.Models.Comments", b =>
                 {
                     b.HasOne("Domain.Models.Courses", "Course")
-                        .WithMany("CommentsList")
+                        .WithMany("Comments")
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Course");
+                });
+
+            modelBuilder.Entity("Domain.Models.CourseInstructor", b =>
+                {
+                    b.HasOne("Domain.Models.Courses", "Courses")
+                        .WithMany("courseInstructor")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Models.Instructors", "Instructors")
+                        .WithMany("CourseInstructor")
+                        .HasForeignKey("InstructorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Courses");
+
+                    b.Navigation("Instructors");
                 });
 
             modelBuilder.Entity("Domain.Models.Prices", b =>
@@ -420,9 +427,16 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Models.Courses", b =>
                 {
-                    b.Navigation("CommentsList");
+                    b.Navigation("Comments");
+
+                    b.Navigation("courseInstructor");
 
                     b.Navigation("Prices");
+                });
+
+            modelBuilder.Entity("Domain.Models.Instructors", b =>
+                {
+                    b.Navigation("CourseInstructor");
                 });
 #pragma warning restore 612, 618
         }

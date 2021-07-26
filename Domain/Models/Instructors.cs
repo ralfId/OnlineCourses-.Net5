@@ -15,6 +15,7 @@ namespace Domain.Models
         public string Lastname { get; set; }
         public string Degree { get; set; }
         public byte[] ProfilePhoto { get; set; }
-        public ICollection<Courses> CoursesList { get; set; }
+        public Guid CourseId { get; set; }
+        public ICollection<CourseInstructor> CourseInstructor { get; set; }
     }
 }
