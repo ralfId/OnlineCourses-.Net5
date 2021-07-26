@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Persistence.Data;
 using Security.TokenSecurity;
+using Security.UserSecurity;
 using System.Reflection;
 using System.Text;
 using WebApi.Middlewares;
@@ -38,6 +40,7 @@ namespace WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddDbContext<OnlineCoursesContext>(opt =>
             {
                 opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
@@ -79,6 +82,7 @@ namespace WebApi
             });
 
             services.AddScoped<IJwtGenerator, JwtGenerator>();
+            services.AddScoped<ICurrentUser, CurrentUser>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
