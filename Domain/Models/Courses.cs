@@ -17,6 +17,6 @@ namespace Domain.Models
         public byte[] CoverPhoto { get; set; }
         public Prices Prices { get; set; }
         public ICollection<Comments> Comments { get; set; }
-        public ICollection<CourseInstructor> courseInstructor { get; set; }
+        public ICollection<CourseInstructor> CourseInstructor { get; set; }
     }
 }

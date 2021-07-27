@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence.Data;
 
 namespace Persistence.Migrations
 {
     [DbContext(typeof(OnlineCoursesContext))]
-    partial class OnlineCoursesContextModelSnapshot : ModelSnapshot
+    [Migration("20210727170007_newMigrationToDB")]
+    partial class newMigrationToDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,9 +54,17 @@ namespace Persistence.Migrations
                     b.Property<Guid>("CourseId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("CoursesCourseId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("InstructorsInstructorId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("InstructorId", "CourseId");
 
-                    b.HasIndex("CourseId");
+                    b.HasIndex("CoursesCourseId");
+
+                    b.HasIndex("InstructorsInstructorId");
 
                     b.ToTable("CourseInstructor");
                 });
@@ -340,16 +350,12 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.Models.CourseInstructor", b =>
                 {
                     b.HasOne("Domain.Models.Courses", "Courses")
-                        .WithMany("CourseInstructor")
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("courseInstructor")
+                        .HasForeignKey("CoursesCourseId");
 
                     b.HasOne("Domain.Models.Instructors", "Instructors")
                         .WithMany("CourseInstructor")
-                        .HasForeignKey("InstructorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("InstructorsInstructorId");
 
                     b.Navigation("Courses");
 
@@ -422,7 +428,7 @@ namespace Persistence.Migrations
                 {
                     b.Navigation("Comments");
 
-                    b.Navigation("CourseInstructor");
+                    b.Navigation("courseInstructor");
 
                     b.Navigation("Prices");
                 });

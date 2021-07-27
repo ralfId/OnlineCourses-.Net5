@@ -1,6 +1,9 @@
 ﻿using Application.HandlersApplication;
+using Application.ModelsDto;
+using AutoMapper;
 using Domain.Models;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Persistence.Data;
 using System;
 using System.Collections.Generic;
@@ -12,29 +15,34 @@ using System.Threading.Tasks;
 
 namespace Application.CoursesFeatures.Queries
 {
-    public class GetCourseByIdQuery : IRequest<Courses>
+    public class GetCourseByIdQuery : IRequest<CourseDto>
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
     }
 
-    public class GetCourseByIdQueryHandler : IRequestHandler<GetCourseByIdQuery, Courses>
+    public class GetCourseByIdQueryHandler : IRequestHandler<GetCourseByIdQuery, CourseDto>
     {
         private readonly OnlineCoursesContext _coursesContext;
+        private readonly IMapper _mapper;
 
-        public GetCourseByIdQueryHandler(OnlineCoursesContext coursesContext)
+        public GetCourseByIdQueryHandler(OnlineCoursesContext coursesContext, IMapper mapper)
         {
             _coursesContext = coursesContext;
+            _mapper = mapper;
         }
-        public async Task<Courses> Handle(GetCourseByIdQuery request, CancellationToken cancellationToken)
+        public async Task<CourseDto> Handle(GetCourseByIdQuery request, CancellationToken cancellationToken)
         {
-            var course = await _coursesContext.Courses.FindAsync(request.Id);
+            var course = await _coursesContext.Courses
+                .Include(x => x.CourseInstructor)
+                .ThenInclude(x => x.Instructors)
+                .FirstOrDefaultAsync(x=> x.CourseId == request.Id);
 
             if (course == null)
             {
                 throw new HandlerExceptions(HttpStatusCode.NotFound, new { message = "The course not found" });
             }
 
-            return course;
+            return _mapper.Map<Courses, CourseDto>(course);
         }
     }
 }

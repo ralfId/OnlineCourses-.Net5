@@ -20,13 +20,26 @@ namespace Persistence.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            
 
             modelBuilder.Entity<Courses>()
                 .HasOne(p => p.Prices)
                 .WithOne(c => c.Courses)
                 .HasForeignKey<Prices>(p => p.PriceId);
-
+            
             modelBuilder.Entity<CourseInstructor>().HasKey(x => new { x.InstructorId, x.CourseId });
+
+            modelBuilder.Entity<CourseInstructor>()
+                .HasOne(x => x.Courses)
+                .WithMany(x => x.CourseInstructor)
+                .HasForeignKey(x => x.CourseId );
+
+            modelBuilder.Entity<CourseInstructor>()
+                .HasOne(x => x.Instructors)
+                .WithMany(x => x.CourseInstructor)
+                .HasForeignKey(x => x.InstructorId);
+
+
         }
 
         public DbSet<Courses> Courses { get; set; }

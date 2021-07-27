@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Models;
+using System.Linq;
 
 namespace Application.ModelsDto
 {
@@ -7,8 +8,11 @@ namespace Application.ModelsDto
     {
         public MappingProfile()
         {
-            CreateMap<Courses, CourseDto>();
+            CreateMap<Courses, CourseDto>()
+                .ForMember(x => x.Instructors, y => y.MapFrom(z => z.CourseInstructor.Select(a => a.Instructors).ToList()));
+
             CreateMap<Instructors, InstructorDto>();
+
             CreateMap<CourseInstructor, CourseInstructorDto>();
         }
     }

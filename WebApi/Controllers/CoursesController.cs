@@ -1,5 +1,6 @@
 ﻿using Application.CoursesFeatures.Commands;
 using Application.CoursesFeatures.Queries;
+using Application.ModelsDto;
 using Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -19,13 +20,13 @@ namespace WebApi.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<List<Courses>>> GetAll()
+        public async Task<ActionResult<List<CourseDto>>> GetAll()
         {
             return await Mediator.Send(new GetAllCoursesQuery());
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Courses>> CourseById(int Id)
+        public async Task<ActionResult<CourseDto>> CourseById(Guid Id)
         {
             return await Mediator.Send(new GetCourseByIdQuery{ Id = Id});
         }

@@ -46,6 +46,7 @@ namespace WebApi
                 opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            services.AddAutoMapper(typeof(GetAllCoursesQuery));
             services.AddMediatR(typeof(GetAllCoursesQuery).Assembly);
             services.AddControllers(opt =>
            {
