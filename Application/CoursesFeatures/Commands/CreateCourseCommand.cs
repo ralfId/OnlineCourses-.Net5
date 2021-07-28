@@ -16,6 +16,9 @@ namespace Application.CoursesFeatures.Commands
         public string Description { get; set; }
         public DateTime PublicationDate { get; set; }
         public List<Guid> InstructorList { get; set; }
+        public decimal Price { get; set; }
+        public decimal PricePromotion { get; set; }
+
 
     }
 
@@ -29,6 +32,7 @@ namespace Application.CoursesFeatures.Commands
         }
         public async Task<Unit> Handle(CreateCourseCommand request, CancellationToken cancellationToken)
         {
+            //create the new course
             var course = new Courses
             {
                 CourseId = Guid.NewGuid(),
@@ -39,6 +43,7 @@ namespace Application.CoursesFeatures.Commands
 
             _coursesContext.Courses.Add(course);
 
+            //add instructors to the new course
             if (request.InstructorList != null)
             {
                 request.InstructorList.ForEach(ci =>
@@ -52,6 +57,18 @@ namespace Application.CoursesFeatures.Commands
                 });
             }
 
+            //add price and pricepromotion to the new course
+            var priceCourse = new Prices
+            {
+                PriceId = Guid.NewGuid(),
+                CourseId = course.CourseId,
+                CurrentPrice = request.Price,
+                Promotion = request.PricePromotion
+            };
+
+            _coursesContext.Prices.Add(priceCourse);    
+
+
             var resp = await _coursesContext.SaveChangesAsync();
 
             if (resp > 0)
@@ -62,7 +79,7 @@ namespace Application.CoursesFeatures.Commands
             {
                 throw new Exception("Can't save course");
             }
-            
+
 
         }
     }
