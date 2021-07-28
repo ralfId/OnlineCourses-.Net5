@@ -27,11 +27,13 @@ namespace Application.CoursesFeatures.Queries
         }
         public async Task<List<CourseDto>> Handle(GetAllCoursesQuery request, CancellationToken cancellationToken)
         {
-            var courses =  await _coursesContext.Courses
+            var courses = await _coursesContext.Courses
+                .Include(x => x.Prices)
+                .Include(x => x.Comments)
                 .Include(x => x.CourseInstructor)
                 .ThenInclude(x => x.Instructors).ToListAsync();
 
-            return  _mapper.Map<List<Courses>, List<CourseDto>>(courses);
+            return _mapper.Map<List<Courses>, List<CourseDto>>(courses);
 
         }
     }

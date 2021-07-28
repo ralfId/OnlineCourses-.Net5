@@ -14,5 +14,7 @@ namespace Application.ModelsDto
         public DateTime PublicationDate { get; set; }
         public byte[] CoverPhoto { get; set; }
         public ICollection<InstructorDto> Instructors { get; set; }
+        public PriceDto Prices { get; set; }
+        public ICollection<CommentDto> Comments { get; set; }
     }
 }

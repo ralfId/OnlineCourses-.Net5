@@ -33,6 +33,8 @@ namespace Application.CoursesFeatures.Queries
         public async Task<CourseDto> Handle(GetCourseByIdQuery request, CancellationToken cancellationToken)
         {
             var course = await _coursesContext.Courses
+                .Include(x=> x.Prices)
+                .Include(x=> x.Comments)
                 .Include(x => x.CourseInstructor)
                 .ThenInclude(x => x.Instructors)
                 .FirstOrDefaultAsync(x=> x.CourseId == request.Id);
