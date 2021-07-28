@@ -38,7 +38,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<Unit>> UpdateCourse(int Id, UpdateCourseCommand course)
+        public async Task<ActionResult<Unit>> UpdateCourse(Guid Id, UpdateCourseCommand course)
         {
             course.Id = Id;
             return await Mediator.Send(course);
