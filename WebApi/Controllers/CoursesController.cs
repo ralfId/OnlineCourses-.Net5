@@ -45,7 +45,7 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Unit>> DeleteCourse(int Id)
+        public async Task<ActionResult<Unit>> DeleteCourse(Guid Id)
         {
             return await Mediator.Send(new DeleteCourseCommand { CourseId = Id });
         }

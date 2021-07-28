@@ -13,7 +13,7 @@ namespace Application.CoursesFeatures.Commands
 {
     public class DeleteCourseCommand : IRequest
     {
-        public int CourseId { get; set; }
+        public Guid CourseId { get; set; }
     }
 
     public class DeleteCourseCommandHandler : IRequestHandler<DeleteCourseCommand>
@@ -31,18 +31,33 @@ namespace Application.CoursesFeatures.Commands
             if (courseExist == null)
             {
                 throw new HandlerExceptions(HttpStatusCode.NotFound, new { message = "Course don't exist!" });
-                }
-
-            _coursesContext.Courses.Remove(courseExist);
-            var resp = await _coursesContext.SaveChangesAsync();
-
-            if(resp > 0)
-            {
-                return Unit.Value;
             }
-            else
+
+            try
             {
-                throw new Exception("Can't delete the course");
+                //select each record on table  CourseInstructor and deleted
+                _coursesContext.CourseInstructor
+                    .Where(x => x.CourseId == request.CourseId)
+                    .ToList()
+                    .ForEach(x => _coursesContext.CourseInstructor.Remove(x));
+
+                //deleted el course on table Courses
+                _coursesContext.Courses.Remove(courseExist);
+                var resp = await _coursesContext.SaveChangesAsync();
+
+                if (resp > 0)
+                {
+                    return Unit.Value;
+                }
+                else
+                {
+                    throw new HandlerExceptions(HttpStatusCode.InternalServerError, new { message = "Can't delete the course" });
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new HandlerExceptions(HttpStatusCode.InternalServerError, new { message = ex.Message.ToString() });
+
             }
         }
     }
