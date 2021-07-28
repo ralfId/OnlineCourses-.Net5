@@ -25,7 +25,7 @@ namespace Persistence.Data
             modelBuilder.Entity<Courses>()
                 .HasOne(p => p.Prices)
                 .WithOne(c => c.Courses)
-                .HasForeignKey<Prices>(p => p.PriceId);
+                .HasForeignKey<Prices>(p => p.CourseId);
             
             modelBuilder.Entity<CourseInstructor>().HasKey(x => new { x.InstructorId, x.CourseId });
 
