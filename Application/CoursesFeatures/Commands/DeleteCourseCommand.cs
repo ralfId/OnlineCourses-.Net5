@@ -41,8 +41,23 @@ namespace Application.CoursesFeatures.Commands
                     .ToList()
                     .ForEach(x => _coursesContext.CourseInstructor.Remove(x));
 
-                //deleted el course on table Courses
+                //delete each comment in a course
+                _coursesContext.Comments
+                    .Where(x => x.CourseId == request.CourseId)
+                    .ToList()
+                    .ForEach(x => _coursesContext.Comments.Remove(x));
+
+                //delete price of the course
+                _coursesContext.Prices
+                    .Where(x => x.CourseId == request.CourseId)
+                    .ToList()
+                    .ForEach(x => _coursesContext.Prices.Remove(x));
+
+                //delete course
                 _coursesContext.Courses.Remove(courseExist);
+
+
+
                 var resp = await _coursesContext.SaveChangesAsync();
 
                 if (resp > 0)
