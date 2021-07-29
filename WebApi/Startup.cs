@@ -21,6 +21,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Persistence.DapperConfiguration;
 using Persistence.Data;
+using Persistence.Repository.IServices;
+using Persistence.Repository.Services;
 using Security.TokenSecurity;
 using Security.UserSecurity;
 using System.Reflection;
@@ -86,6 +88,8 @@ namespace WebApi
 
             services.AddScoped<IJwtGenerator, JwtGenerator>();
             services.AddScoped<ICurrentUser, CurrentUser>();
+            services.AddTransient<IFactoryConnection, FactoryConnection>();
+            services.AddTransient<IInstructorRepository, InstructorRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
