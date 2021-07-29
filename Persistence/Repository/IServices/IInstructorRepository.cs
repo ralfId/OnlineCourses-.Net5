@@ -11,7 +11,7 @@ namespace Persistence.Repository.IServices
     {
         Task<IEnumerable<InstructorDM>> GetAllAsync();
         Task<InstructorDM> GetItemByIdAsync(Guid id);
-        Task<int> CreateItemAsync(InstructorDM instructor);
+        Task<int> CreateItemAsync(string name, string lastname, string degree);
         Task<int> UpdateItemAsync(InstructorDM instructor);
         Task<int> DeleteItemAsync(Guid id);
     }

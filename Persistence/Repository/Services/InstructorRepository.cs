@@ -27,7 +27,7 @@ namespace Persistence.Repository.Services
                 var storeProcedure = "sp_Get_All_Instructors";
                 instructorList = await connection.QueryAsync<InstructorDM>(storeProcedure, null, commandType: CommandType.StoredProcedure);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.ToString());
             }
@@ -44,9 +44,36 @@ namespace Persistence.Repository.Services
             throw new NotImplementedException();
         }
 
-        public Task<int> CreateItemAsync(InstructorDM instructor)
+        public async Task<int> CreateItemAsync(string name, string lastname, string degree)
         {
-            throw new NotImplementedException();
+            var sp = "sp_Create_Instructor";
+            int result = 0;
+            try
+            {
+                var connection = _factoryConn.GetConnection();
+                result = await connection.ExecuteAsync(
+                    sp,
+                    new
+                    {
+                        InstructorId = Guid.NewGuid(),
+                        Name = name,
+                        LastName = lastname,
+                        Degree = degree
+                    },
+                    commandType: CommandType.StoredProcedure
+                    );
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Can´t create an instructor >>> " + ex.Message.ToString());
+            }
+            finally
+            {
+                _factoryConn.CloseConnection();
+            }
+
+            return result;
         }
 
         public Task<int> UpdateItemAsync(InstructorDM instructor)

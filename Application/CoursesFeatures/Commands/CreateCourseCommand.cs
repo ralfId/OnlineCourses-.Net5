@@ -1,9 +1,11 @@
-﻿using Domain.Models;
+﻿using Application.HandlersApplication;
+using Domain.Models;
 using MediatR;
 using Persistence.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -77,7 +79,7 @@ namespace Application.CoursesFeatures.Commands
             }
             else
             {
-                throw new Exception("Can't save course");
+                throw new HandlerExceptions(HttpStatusCode.InternalServerError, new { message = "Can't create the course" });
             }
 
 

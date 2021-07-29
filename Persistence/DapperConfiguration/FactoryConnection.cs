@@ -13,9 +13,8 @@ namespace Persistence.DapperConfiguration
     {
         private IDbConnection _connection;
         private readonly IOptions<ConnectionConfiguration> _configs;
-        public FactoryConnection(IDbConnection connection, IOptions<ConnectionConfiguration> configs)
+        public FactoryConnection(IOptions<ConnectionConfiguration> configs)
         {
-            _connection = connection;
             _configs = configs;
         }
 
@@ -29,7 +28,7 @@ namespace Persistence.DapperConfiguration
 
         public IDbConnection GetConnection()
         {
-            if (_connection == null) _connection = new SqlConnection(_configs.Value.SQLConnection);
+            if (_connection == null) _connection = new SqlConnection(_configs.Value.DefaultConnection);
 
             if (_connection.State != ConnectionState.Open) _connection.Open();
 

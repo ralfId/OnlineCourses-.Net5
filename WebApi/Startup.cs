@@ -25,7 +25,6 @@ using Persistence.Repository.IServices;
 using Persistence.Repository.Services;
 using Security.TokenSecurity;
 using Security.UserSecurity;
-using System.Reflection;
 using System.Text;
 using WebApi.Middlewares;
 
@@ -44,11 +43,14 @@ namespace WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            //sql connection
             services.AddDbContext<OnlineCoursesContext>(opt =>
             {
                 opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
-            services.Configure<ConnectionConfiguration>(Configuration.GetSection("DefaultConnection"));
+            services.AddOptions();
+            //dapper connection
+            services.Configure<ConnectionConfiguration>(Configuration.GetSection("ConnectionStrings"));
 
             services.AddAutoMapper(typeof(GetAllCoursesQuery));
             services.AddMediatR(typeof(GetAllCoursesQuery).Assembly);
