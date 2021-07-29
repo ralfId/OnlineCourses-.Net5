@@ -19,6 +19,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Persistence.DapperConfiguration;
 using Persistence.Data;
 using Security.TokenSecurity;
 using Security.UserSecurity;
@@ -45,6 +46,7 @@ namespace WebApi
             {
                 opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
+            services.Configure<ConnectionConfiguration>(Configuration.GetSection("DefaultConnection"));
 
             services.AddAutoMapper(typeof(GetAllCoursesQuery));
             services.AddMediatR(typeof(GetAllCoursesQuery).Assembly);
