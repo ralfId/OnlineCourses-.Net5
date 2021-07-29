@@ -9,7 +9,7 @@ namespace Persistence.Repository.IServices
 {
     public interface IInstructorRepository
     {
-        Task<IList<InstructorDM>> GetAllAsync();
+        Task<IEnumerable<InstructorDM>> GetAllAsync();
         Task<InstructorDM> GetItemByIdAsync(Guid id);
         Task<int> CreateItemAsync(InstructorDM instructor);
         Task<int> UpdateItemAsync(InstructorDM instructor);
