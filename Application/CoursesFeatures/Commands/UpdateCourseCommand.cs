@@ -20,7 +20,8 @@ namespace Application.CoursesFeatures.Commands
         public string Description { get; set; }
         public DateTime? PublicationDate { get; set; }
         public List<Guid> InstructorsList { get; set; }
-
+        public decimal? Price { get; set; }
+        public decimal? PricePromotion { get; set; }
     }
 
     public class UpdateCourseCommandHandler : IRequestHandler<UpdateCourseCommand>
@@ -42,11 +43,33 @@ namespace Application.CoursesFeatures.Commands
                 throw new HandlerExceptions(HttpStatusCode.NoContent, new { message = "Course not found"});
             }
 
-
+            //update commun properties
             courseExist.Title = request.Title ?? courseExist.Title;
             courseExist.Description = request.Description ?? courseExist.Description;
             courseExist.PublicationDate = request.PublicationDate ?? courseExist.PublicationDate;
 
+            //update prices
+            var priceCourse = _coursesContext.Prices.Where(x => x.CourseId == courseExist.CourseId).FirstOrDefault();
+
+            if (priceCourse!= null)
+            {
+                priceCourse.CurrentPrice = request.Price ?? priceCourse.CurrentPrice;
+                priceCourse.Promotion = request.PricePromotion ?? priceCourse.Promotion;
+            }
+            else
+            {
+                var newPriceCourse = new Prices
+                {
+                    PriceId = Guid.NewGuid(),
+                    CourseId = courseExist.CourseId,
+                    CurrentPrice = request.Price ?? 0,
+                    Promotion = request.PricePromotion ?? 0
+                };
+
+               await _coursesContext.Prices.AddAsync(newPriceCourse);
+            }
+
+            //update instructors
             if (request.InstructorsList != null && request.InstructorsList.Count > 0)
             {
                 //remove old instrutors in a course
