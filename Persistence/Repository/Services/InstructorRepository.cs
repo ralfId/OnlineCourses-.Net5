@@ -76,14 +76,59 @@ namespace Persistence.Repository.Services
             return result;
         }
 
-        public Task<int> UpdateItemAsync(InstructorDM instructor)
+        public async Task<int> UpdateItemAsync(Guid id, string name, string lastname, string degree)
         {
-            throw new NotImplementedException();
+            var sp = "sp_Update_Instructor";
+            int result = 0;
+
+            try
+            {
+                var connection = _factoryConn.GetConnection();
+                result = await connection.ExecuteAsync(
+                    sp,
+                    new
+                    {
+                        InstructorId = id,
+                        Name = name,
+                        Lastname = lastname,
+                        Degree  = degree
+                    },
+                    commandType: CommandType.StoredProcedure);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Can´t update the Instructor >>>" + ex.Message.ToString());
+            }
+            finally
+            {
+                _factoryConn.CloseConnection();
+            }
+
+            return result;
         }
 
-        public Task<int> DeleteItemAsync(Guid id)
+        public async Task<int> DeleteItemAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var sp = "sp_Delete_Instructor";
+            int result = 0;
+
+            try
+            {
+                var connetion = _factoryConn.GetConnection();
+
+                result = await connetion.ExecuteAsync(sp, new { InstructorId = id }, commandType: CommandType.StoredProcedure);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("can't delete the course >>> " + ex.Message.ToString());
+            }
+            finally
+            {
+                _factoryConn.CloseConnection();
+            }
+            return result;
         }
     }
 }
