@@ -19,6 +19,12 @@ namespace WebApi.Controllers
             return await Mediator.Send(new GetAllInstructorsQuery());
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<InstructorDM>> GetInstructorById(Guid id)
+        {
+            return await Mediator.Send(new GetInstructorByIdQuery { InstructorId = id });
+        }
+
         [HttpPost]
         public async Task<ActionResult<Unit>> CreateInstructor(CreateInstructorCommand instructor)
         {

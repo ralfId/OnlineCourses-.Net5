@@ -20,11 +20,11 @@ namespace Persistence.Repository.Services
         public async Task<IEnumerable<InstructorDM>> GetAllAsync()
         {
             IEnumerable<InstructorDM> instructorList = null;
+            var storeProcedure = "sp_Get_All_Instructors";
 
             try
             {
                 var connection = _factoryConn.GetConnection();
-                var storeProcedure = "sp_Get_All_Instructors";
                 instructorList = await connection.QueryAsync<InstructorDM>(storeProcedure, null, commandType: CommandType.StoredProcedure);
             }
             catch (Exception ex)
@@ -39,9 +39,28 @@ namespace Persistence.Repository.Services
             return instructorList;
         }
 
-        public Task<InstructorDM> GetItemByIdAsync(Guid id)
+        public async Task<InstructorDM> GetItemByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var storeProcedure = "sp_GetInstructor_ById";
+            //InstructorDM Instructor = null;
+            var instructor = new InstructorDM();
+
+            try
+            {
+                var connection = _factoryConn.GetConnection();
+                instructor = await connection.QueryFirstAsync<InstructorDM>(storeProcedure, new { @InstructorId = id }, commandType: CommandType.StoredProcedure);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Can't get the instructor >>> " + ex.Message.ToString());
+            }
+            finally
+            {
+                _factoryConn.CloseConnection();
+            }
+
+            return instructor;
+
         }
 
         public async Task<int> CreateItemAsync(string name, string lastname, string degree)
@@ -91,7 +110,7 @@ namespace Persistence.Repository.Services
                         InstructorId = id,
                         Name = name,
                         Lastname = lastname,
-                        Degree  = degree
+                        Degree = degree
                     },
                     commandType: CommandType.StoredProcedure);
 
