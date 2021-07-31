@@ -43,7 +43,7 @@ namespace Persistence.Repository.Services
         {
             var storeProcedure = "sp_GetInstructor_ById";
             //InstructorDM Instructor = null;
-            var instructor = new InstructorDM();
+            InstructorDM instructor;
 
             try
             {
