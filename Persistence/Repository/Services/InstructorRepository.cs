@@ -77,7 +77,7 @@ namespace Persistence.Repository.Services
                         InstructorId = Guid.NewGuid(),
                         Name = name,
                         LastName = lastname,
-                        Degree = degree
+                        Degree = degree,
                     },
                     commandType: CommandType.StoredProcedure
                     );

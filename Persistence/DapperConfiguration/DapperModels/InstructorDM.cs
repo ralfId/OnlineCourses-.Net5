@@ -8,5 +8,6 @@ namespace Persistence.DapperConfiguration.DapperModels
         public string Name { get; set; }
         public string Lastname { get; set; }
         public string Degree { get; set; }
+        public DateTime CreationDate { get; set; }
     }
 }

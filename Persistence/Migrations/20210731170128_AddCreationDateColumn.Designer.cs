@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence.Data;
 
 namespace Persistence.Migrations
 {
     [DbContext(typeof(OnlineCoursesContext))]
-    partial class OnlineCoursesContextModelSnapshot : ModelSnapshot
+    [Migration("20210731170128_AddCreationDateColumn")]
+    partial class AddCreationDateColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

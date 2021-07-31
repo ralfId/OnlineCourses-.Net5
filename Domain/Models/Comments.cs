@@ -14,6 +14,7 @@ namespace Domain.Models
         public string Student { get; set; }
         public int Score { get; set; }
         public string CommentText { get; set; }
+        public DateTime CreationDate { get; set; }
         public Guid CourseId { get; set; }
         public Courses Course { get; set; }
     }

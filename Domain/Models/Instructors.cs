@@ -12,6 +12,7 @@ namespace Domain.Models
         public string Lastname { get; set; }
         public string Degree { get; set; }
         public byte[] ProfilePhoto { get; set; }
+        public DateTime CreationDate { get; set; }
         public ICollection<CourseInstructor> CourseInstructor { get; set; }
     }
 }

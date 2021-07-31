@@ -13,6 +13,7 @@ namespace Application.ModelsDto
         public string Description { get; set; }
         public DateTime PublicationDate { get; set; }
         public byte[] CoverPhoto { get; set; }
+        public DateTime CreationDate { get; set; }
         public ICollection<InstructorDto> Instructors { get; set; }
         public PriceDto Prices { get; set; }
         public ICollection<CommentDto> Comments { get; set; }

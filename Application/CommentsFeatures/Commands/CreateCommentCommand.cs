@@ -36,7 +36,8 @@ namespace Application.CommentsFeatures.Commands
                 Student = request.Student,
                 Score = request.Score,
                 CommentText = request.CommentText,
-                CourseId = request.CourseId
+                CourseId = request.CourseId,
+                CreationDate = DateTime.UtcNow
             };
 
             await _coursesContext.Comments.AddAsync(comment);

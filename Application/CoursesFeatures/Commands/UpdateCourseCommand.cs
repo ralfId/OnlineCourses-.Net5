@@ -47,6 +47,7 @@ namespace Application.CoursesFeatures.Commands
             courseExist.Title = request.Title ?? courseExist.Title;
             courseExist.Description = request.Description ?? courseExist.Description;
             courseExist.PublicationDate = request.PublicationDate ?? courseExist.PublicationDate;
+            courseExist.CreationDate = DateTime.UtcNow;
 
             //update prices
             var priceCourse = _coursesContext.Prices.Where(x => x.CourseId == courseExist.CourseId).FirstOrDefault();

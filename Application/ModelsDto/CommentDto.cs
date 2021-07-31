@@ -9,5 +9,6 @@ namespace Application.ModelsDto
         public int Score { get; set; }
         public string CommentText { get; set; }
         public Guid CourseId { get; set; }
+        public DateTime CreationDate { get; set; }
     }
 }

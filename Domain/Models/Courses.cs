@@ -16,6 +16,7 @@ namespace Domain.Models
         public DateTime PublicationDate { get; set; }
         public byte[] CoverPhoto { get; set; }
         public Prices Prices { get; set; }
+        public DateTime CreationDate { get; set; }
         public ICollection<Comments> Comments { get; set; }
         public ICollection<CourseInstructor> CourseInstructor { get; set; }
     }

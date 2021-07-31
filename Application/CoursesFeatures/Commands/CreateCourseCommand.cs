@@ -40,7 +40,8 @@ namespace Application.CoursesFeatures.Commands
                 CourseId = Guid.NewGuid(),
                 Title = request.Title,
                 Description = request.Description,
-                PublicationDate = request.PublicationDate
+                PublicationDate = request.PublicationDate,
+                CreationDate = DateTime.UtcNow
             };
 
             _coursesContext.Courses.Add(course);
