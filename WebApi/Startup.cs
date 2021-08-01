@@ -92,6 +92,7 @@ namespace WebApi
             services.AddScoped<ICurrentUser, CurrentUser>();
             services.AddTransient<IFactoryConnection, FactoryConnection>();
             services.AddTransient<IInstructorRepository, InstructorRepository>();
+            services.AddTransient<IPaginationRepository, PaginationRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
