@@ -65,8 +65,14 @@ namespace WebApi
             //config CoreIdentity
             var builder = services.AddIdentityCore<Users>();
             var identityBuilder = new IdentityBuilder(builder.UserType, builder.Services);
+            //add roles
+            identityBuilder.AddRoles<IdentityRole>();
+            identityBuilder.AddClaimsPrincipalFactory<UserClaimsPrincipalFactory<Users, IdentityRole>>();
+
             identityBuilder.AddEntityFrameworkStores<OnlineCoursesContext>();
             identityBuilder.AddSignInManager<SignInManager<Users>>();
+
+            
 
             services.TryAddSingleton<ISystemClock, SystemClock>();
 
