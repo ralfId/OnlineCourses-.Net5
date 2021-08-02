@@ -28,7 +28,7 @@ namespace Application.CoursesFeatures.Queries
         public async Task<PaginationModel> Handle(PaginationQuery request, CancellationToken cancellationToken)
         {
             var parameters = new Dictionary<string, object>();
-            parameters.Add("CourseName", request.Title);
+            parameters.Add("Title", request.Title);
 
             return await _paginationRepos.returnPageAsync(
                 "sp_Get_Pagination",

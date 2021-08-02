@@ -47,7 +47,7 @@ namespace Persistence.Repository.Services
 
 
                 //get list of results
-                var result = await connection.QueryAsync(StoreProcedure, null, commandType: CommandType.StoredProcedure);
+                var result = await connection.QueryAsync(StoreProcedure, parameters, commandType: CommandType.StoredProcedure);
                 //covert result to dictionary
                 objectsList = result.Select(x => (IDictionary<string, object>)x).ToList();
                 
