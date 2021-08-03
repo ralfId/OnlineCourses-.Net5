@@ -41,5 +41,11 @@ namespace WebApi.Controllers
         {
             return await Mediator.Send(removeRole);
         }
+
+        [HttpGet("{username}")]
+        public async Task<ActionResult<List<string>>> GetRolesByUser(string username)
+        {
+            return await Mediator.Send(new GetRolesByUserQuerty { UserName = username});
+        }
     }
 }
