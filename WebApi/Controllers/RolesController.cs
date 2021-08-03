@@ -29,5 +29,11 @@ namespace WebApi.Controllers
         {
             return await Mediator.Send(new GetAllRolesQuery());
         }
+
+        [HttpPost("enrolluser")]
+        public async Task<ActionResult<Unit>> EnrollUser(AddRoleUserCommand addRole)
+        {
+            return await Mediator.Send(addRole);
+        }
     }
 }
