@@ -35,5 +35,11 @@ namespace WebApi.Controllers
         {
             return await Mediator.Send(addRole);
         }
+
+        [HttpPost("unenrolluser")]
+        public async Task<ActionResult<Unit>> UnEnrollUser(RemoveRoleUserCommand removeRole)
+        {
+            return await Mediator.Send(removeRole);
+        }
     }
 }
