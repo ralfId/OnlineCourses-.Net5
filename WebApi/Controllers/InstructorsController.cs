@@ -1,6 +1,7 @@
 ﻿using Application.InstructorsFeatures.Commands;
 using Application.InstructorsFeatures.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Persistence.DapperConfiguration.DapperModels;
@@ -13,6 +14,7 @@ namespace WebApi.Controllers
 {
     public class InstructorsController : ApiControllerBase
     {
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult<List<InstructorDM>>> GetAllInstructors()
         {
