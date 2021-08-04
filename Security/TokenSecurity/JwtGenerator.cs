@@ -23,7 +23,7 @@ namespace Security.TokenSecurity
 
             if (roles != null)
             {
-                roles.ForEach(x => new Claim(ClaimTypes.Role, x));
+                roles.ForEach(x => claims.Add(new Claim(ClaimTypes.Role, x)));
             }
 
 
