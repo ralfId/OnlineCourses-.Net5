@@ -4,6 +4,7 @@ using Application.ResponseModels;
 using Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -47,13 +48,16 @@ namespace Application.SecurityFeatures.Commands
                 throw new HandlerExceptions(HttpStatusCode.Unauthorized);
             }
 
+            var roles = await _userManager.GetRolesAsync(user);
+            var rolesList = new List<string>(roles);
+
             return new UserData
             {
                 Name = user.Name,
                 LastName = user.LastName,
                 UserName = user.UserName,
                 Email = user.Email,
-                Token = _jwtGenerator.CreateToken(user),
+                Token = _jwtGenerator.CreateToken(user, rolesList),
                 Image = null
             };
         }

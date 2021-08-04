@@ -40,13 +40,15 @@ namespace Application.SecurityFeatures.Queries
                 throw new HandlerExceptions(HttpStatusCode.InternalServerError, new { message = "Can't get current user" });
             }
 
+            var roles =await _userManager.GetRolesAsync(user);
+            var rolesList = new List<string>(roles);
             return new UserData
             {
                 Name = user.Name,
                 LastName = user.LastName,
                 UserName = user.UserName,
                 Email = user.Email,
-                Token = _jwtGenerator.CreateToken(user),
+                Token = _jwtGenerator.CreateToken(user, rolesList),
                 Image = null
             };
         }

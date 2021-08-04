@@ -13,13 +13,20 @@ namespace Security.TokenSecurity
 {
     public class JwtGenerator : IJwtGenerator
     {
-        public string CreateToken(Users user)
+        public string CreateToken(Users user, List<string> roles)
         {
 
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.NameId, user.Name, user.LastName, user.UserName)
             };
+
+            if (roles != null)
+            {
+                roles.ForEach(x => new Claim(ClaimTypes.Role, x));
+            }
+
+
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ud8?xv$K5f7rvJ2=H3E5J*mk!9G"));
 

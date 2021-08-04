@@ -72,7 +72,7 @@ namespace Application.SecurityFeatures.Commands
                 LastName = user.LastName,
                 Email = user.LastName,
                 UserName = user.UserName,
-                Token = _jwtGenerator.CreateToken(user),
+                Token = _jwtGenerator.CreateToken(user, null),
                 Image = null
             };
         }
