@@ -27,5 +27,11 @@ namespace WebApi.Controllers
         {
             return await Mediator.Send(new GetCurrentUserQuerty());
         }
+
+        [HttpPut("update")]
+        public async Task<ActionResult<UserData>> UpdateUser(UpdateUserCommand updateUser)
+        {
+            return await Mediator.Send(updateUser);
+        }
     }
 }
