@@ -32,6 +32,7 @@ namespace WebApi
 {
     public class Startup
     {
+        private readonly string _corsApp = "corsApp";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -43,10 +44,15 @@ namespace WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             //allow requests from any site using cors config
-            services.AddCors(co => co.AddPolicy("corsApp", builder =>
+            services.AddCors(opt =>
             {
-                builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-            }));
+                opt.AddDefaultPolicy(builder =>
+               {
+                   builder.AllowAnyOrigin();
+                   builder.AllowAnyMethod();
+                   builder.AllowAnyHeader();
+               });
+            });
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             //sql connection
@@ -112,7 +118,6 @@ namespace WebApi
         {
             app.UseMiddleware<HandlerErrorsMiddleware>();
 
-            app.UseCors("corsApp");
 
             if (env.IsDevelopment())
             {
@@ -120,12 +125,15 @@ namespace WebApi
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApi v1"));
             }
-            //set to use Jwt security
-            app.UseAuthentication();
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors( opt => opt.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+            //set to use Jwt security
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

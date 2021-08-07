@@ -44,8 +44,8 @@ namespace Application.SecurityFeatures.Commands
                 throw new HandlerExceptions(HttpStatusCode.BadRequest, new { message = "User name is in use" });
 
             }
-              
-            var emailExist = await  _coursesContext.Users.Where(e => e.Email == request.Email).AnyAsync();
+
+            var emailExist = await _coursesContext.Users.Where(e => e.Email == request.Email).AnyAsync();
             if (emailExist)
             {
                 throw new HandlerExceptions(HttpStatusCode.BadRequest, new { message = "Email already in use" });
@@ -53,7 +53,7 @@ namespace Application.SecurityFeatures.Commands
 
             var user = new Users
             {
-                Name =request.Name,
+                Name = request.Name,
                 LastName = request.LastName,
                 Email = request.Email,
                 UserName = request.UserName
@@ -61,20 +61,24 @@ namespace Application.SecurityFeatures.Commands
 
             var createUser = await _userManager.CreateAsync(user, request.Password);
 
-            if (!createUser.Succeeded)
+            if (createUser.Succeeded)
+            {
+                return new UserData
+                {
+                    Name = user.Name,
+                    LastName = user.LastName,
+                    Email = user.LastName,
+                    UserName = user.UserName,
+                    Token = _jwtGenerator.CreateToken(user, null),
+                    Image = null
+                };
+            }
+            else
             {
                 throw new HandlerExceptions(HttpStatusCode.InternalServerError, new { message = createUser.Errors.FirstOrDefault() });
             }
 
-            return new UserData
-            {
-                Name = user.Name,
-                LastName = user.LastName,
-                Email = user.LastName,
-                UserName = user.UserName,
-                Token = _jwtGenerator.CreateToken(user, null),
-                Image = null
-            };
+
         }
     }
 }
