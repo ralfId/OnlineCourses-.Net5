@@ -42,6 +42,12 @@ namespace WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //allow requests from any site using cors config
+            services.AddCors(co => co.AddPolicy("corsApp", builder =>
+            {
+                builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+            }));
+
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             //sql connection
             services.AddDbContext<OnlineCoursesContext>(opt =>
@@ -72,7 +78,7 @@ namespace WebApi
             identityBuilder.AddEntityFrameworkStores<OnlineCoursesContext>();
             identityBuilder.AddSignInManager<SignInManager<Users>>();
 
-            
+
 
             services.TryAddSingleton<ISystemClock, SystemClock>();
 
