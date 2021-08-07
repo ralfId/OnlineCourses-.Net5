@@ -111,6 +111,9 @@ namespace WebApi
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseMiddleware<HandlerErrorsMiddleware>();
+
+            app.UseCors("corsApp");
+
             if (env.IsDevelopment())
             {
                 //app.UseDeveloperExceptionPage();
