@@ -18,7 +18,7 @@ namespace Security.TokenSecurity
 
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.NameId, user.Name, user.LastName, user.UserName)
+                new Claim(JwtRegisteredClaimNames.NameId, user.UserName)
             };
 
             if (roles != null)
