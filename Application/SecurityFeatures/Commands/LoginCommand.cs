@@ -38,14 +38,14 @@ namespace Application.SecurityFeatures.Commands
 
             if (user == null)
             {
-                throw new HandlerExceptions(HttpStatusCode.Unauthorized);
+                throw new HandlerExceptions(HttpStatusCode.Unauthorized, new { message = "User not exist, please create your accout" });
             }
 
             var resp = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
 
             if (!resp.Succeeded)
             {
-                throw new HandlerExceptions(HttpStatusCode.Unauthorized);
+                throw new HandlerExceptions(HttpStatusCode.Unauthorized, new { message = "Something went wrong. Check your email and password!" });
             }
 
             var roles = await _userManager.GetRolesAsync(user);
