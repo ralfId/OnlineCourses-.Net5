@@ -1,3 +1,4 @@
+using System;
 using Application.Contracts;
 using Application.HandlersApplication;
 using Application.ResponseModels;
@@ -21,6 +22,7 @@ namespace Application.SecurityFeatures.Commands
         public string UserName { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
+        public ProfileImage UserImage { get; set; }
     }
 
     public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, UserData>
@@ -29,7 +31,7 @@ namespace Application.SecurityFeatures.Commands
         private readonly UserManager<Users> _userManager;
         private readonly IJwtGenerator _jwtGenerator;
         private readonly IPasswordHasher<Users> _passwordHasher;
-        public UpdateUserCommandHandler(OnlineCoursesContext coursesContext, 
+        public UpdateUserCommandHandler(OnlineCoursesContext coursesContext,
             UserManager<Users> userManager,
             IJwtGenerator jwtGenerator,
             IPasswordHasher<Users> passwordHasher)
@@ -44,7 +46,7 @@ namespace Application.SecurityFeatures.Commands
         {
             //user in db
             var user = await _userManager.FindByNameAsync(request.UserName);
-            if (user==null)
+            if (user == null)
             {
                 throw new HandlerExceptions(HttpStatusCode.NotFound, new { message = "User not exist" });
             }
@@ -55,6 +57,32 @@ namespace Application.SecurityFeatures.Commands
             {
                 throw new HandlerExceptions(HttpStatusCode.InternalServerError, new { message = "This email is in use" });
             }
+
+            if (request.UserImage != null)
+            {
+                var userImage = await _coursesContext.Documents.Where(x => x.ObjectReference == new Guid(user.Id)).FirstOrDefaultAsync();
+
+                if (userImage == null)
+                {
+                    var newUserImage = new Documents
+                    {
+                        DocumentId = Guid.NewGuid(),
+                        ObjectReference = new Guid(user.Id),
+                        Name = request.UserImage.Name,
+                        Extention = request.UserImage.Extention,
+                        Content = Convert.FromBase64String(request.UserImage.Data),
+                        CreationDate = DateTime.UtcNow
+                    };
+                    await _coursesContext.Documents.AddAsync(newUserImage);
+                }
+                else
+                {
+                    userImage.Name = request.UserImage.Name;
+                    userImage.Content = Convert.FromBase64String(request.UserImage.Data);
+                    userImage.Extention = request.UserImage.Extention;
+                }
+            }
+
 
             user.Name = request.Name;
             user.LastName = request.LastName;
@@ -68,13 +96,25 @@ namespace Application.SecurityFeatures.Commands
             {
                 var roles = await _userManager.GetRolesAsync(user);
                 var rolesList = new List<string>(roles);
+
+                //get user image profile if exist
+                ProfileImage profileImage = new ProfileImage();
+
+                var userImage = await _coursesContext.Documents.Where(x => x.ObjectReference == new Guid(user.Id)).FirstOrDefaultAsync();
+                if (userImage != null)
+                {
+                    profileImage.Name = userImage.Name;
+                    profileImage.Data = Convert.ToBase64String(userImage.Content);
+                    profileImage.Extention = userImage.Extention;
+
+                }
                 return new UserData
                 {
                     Name = user.Name,
                     LastName = user.LastName,
                     UserName = user.UserName,
                     Email = user.Email,
-                    Image = null,
+                    ProfileImage = profileImage ?? null,
                     Token = _jwtGenerator.CreateToken(user, rolesList)
                 };
             }
