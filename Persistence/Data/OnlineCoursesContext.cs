@@ -47,7 +47,6 @@ namespace Persistence.Data
         public DbSet<CourseInstructor> CourseInstructor { get; set; }
         public DbSet<Prices> Prices { get; set; }
         public DbSet<Comments> Comments { get; set; }
-
-
+        public DbSet<Documents> Documents {get; set;}
     }
 }
