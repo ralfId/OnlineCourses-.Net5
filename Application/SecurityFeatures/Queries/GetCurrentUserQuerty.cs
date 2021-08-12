@@ -4,6 +4,8 @@ using Application.ResponseModels;
 using Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Persistence.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,12 +25,14 @@ namespace Application.SecurityFeatures.Queries
         private readonly UserManager<Users> _userManager;
         private readonly IJwtGenerator _jwtGenerator;
         private readonly ICurrentUser _currentUser;
+        private readonly OnlineCoursesContext _coursesContext;
 
-        public GetCurrentUserQuertyHandler(UserManager<Users> userManager, IJwtGenerator jwtGenerator, ICurrentUser currentUser)
+        public GetCurrentUserQuertyHandler(UserManager<Users> userManager, IJwtGenerator jwtGenerator, ICurrentUser currentUser, OnlineCoursesContext coursesContext)
         {
             _userManager = userManager;
             _jwtGenerator = jwtGenerator;
             _currentUser = currentUser;
+            _coursesContext = coursesContext;
         }
         public async Task<UserData> Handle(GetCurrentUserQuerty request, CancellationToken cancellationToken)
         {
@@ -42,6 +46,19 @@ namespace Application.SecurityFeatures.Queries
 
             var roles =await _userManager.GetRolesAsync(user);
             var rolesList = new List<string>(roles);
+
+            //get user image profile if exist
+            ProfileImage profileImage = new ProfileImage();
+            
+            var userImage = await _coursesContext.Documents.Where(x => x.ObjectReference == new Guid(user.Id)).FirstOrDefaultAsync();
+
+            if(userImage != null)
+            {
+                profileImage.Name = userImage.Name;
+                profileImage.Data = Convert.ToBase64String(userImage.Content);
+                profileImage.Extention = userImage.Extention;
+            }
+
             return new UserData
             {
                 Name = user.Name,
@@ -49,7 +66,7 @@ namespace Application.SecurityFeatures.Queries
                 UserName = user.UserName,
                 Email = user.Email,
                 Token = _jwtGenerator.CreateToken(user, rolesList),
-                Image = null
+                ProfileImage = profileImage ?? null
             };
         }
     }

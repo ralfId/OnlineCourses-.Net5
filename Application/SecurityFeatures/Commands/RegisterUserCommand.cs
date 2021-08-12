@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Data;
+using System;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -20,6 +21,7 @@ namespace Application.SecurityFeatures.Commands
         public string UserName { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
+        public ProfileImage UserImage { get; set; }
     }
 
     public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, UserData>
@@ -50,6 +52,8 @@ namespace Application.SecurityFeatures.Commands
             {
                 throw new HandlerExceptions(HttpStatusCode.BadRequest, new { message = "Email already in use" });
             }
+
+
 
             var user = new Users
             {

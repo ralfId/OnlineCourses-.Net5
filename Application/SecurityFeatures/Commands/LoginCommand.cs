@@ -4,7 +4,11 @@ using Application.ResponseModels;
 using Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Persistence.Data;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,15 +26,18 @@ namespace Application.SecurityFeatures.Commands
         private readonly UserManager<Users> _userManager;
         private readonly SignInManager<Users> _signInManager;
         private readonly IJwtGenerator _jwtGenerator;
+        private readonly OnlineCoursesContext _coursesContext;
 
         public LoginCommandHandler(
-            UserManager<Users> userManager, 
-            SignInManager<Users> signInManager, 
-            IJwtGenerator jwtGenerator)
+            UserManager<Users> userManager,
+            SignInManager<Users> signInManager,
+            IJwtGenerator jwtGenerator,
+            OnlineCoursesContext coursesContext)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _jwtGenerator = jwtGenerator;
+            _coursesContext = coursesContext;
         }
         public async Task<UserData> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
@@ -43,23 +50,39 @@ namespace Application.SecurityFeatures.Commands
 
             var resp = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
 
-            if (!resp.Succeeded)
+            if (resp.Succeeded)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                var rolesList = new List<string>(roles);
+
+                //get user image profile if exist
+                ProfileImage profileImage = new ProfileImage();
+
+                var userImage = await _coursesContext.Documents.Where(x => x.ObjectReference == new Guid(user.Id)).FirstOrDefaultAsync();
+
+                if (userImage != null)
+                {
+                    profileImage.Name = userImage.Name;
+                    profileImage.Data = Convert.ToBase64String(userImage.Content);
+                    profileImage.Extention = userImage.Extention;
+                }
+
+                return new UserData
+                {
+                    Name = user.Name,
+                    LastName = user.LastName,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    Token = _jwtGenerator.CreateToken(user, rolesList),
+                    ProfileImage = profileImage ?? null
+                };
+            }
+            else
             {
                 throw new HandlerExceptions(HttpStatusCode.Unauthorized, new { message = "Something went wrong. Check your email and password!" });
             }
 
-            var roles = await _userManager.GetRolesAsync(user);
-            var rolesList = new List<string>(roles);
 
-            return new UserData
-            {
-                Name = user.Name,
-                LastName = user.LastName,
-                UserName = user.UserName,
-                Email = user.Email,
-                Token = _jwtGenerator.CreateToken(user, rolesList),
-                Image = null
-            };
         }
     }
 }
