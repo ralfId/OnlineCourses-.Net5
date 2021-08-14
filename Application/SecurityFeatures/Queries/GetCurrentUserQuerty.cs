@@ -48,15 +48,15 @@ namespace Application.SecurityFeatures.Queries
             var rolesList = new List<string>(roles);
 
             //get user image profile if exist
-            ProfileImage profileImage = new ProfileImage();
+            ProfileImage UserImage = new ProfileImage();
             
             var userImage = await _coursesContext.Documents.Where(x => x.ObjectReference == new Guid(user.Id)).FirstOrDefaultAsync();
 
             if(userImage != null)
             {
-                profileImage.Name = userImage.Name;
-                profileImage.Data = Convert.ToBase64String(userImage.Content);
-                profileImage.Extention = userImage.Extention;
+                UserImage.Name = userImage.Name;
+                UserImage.Data = Convert.ToBase64String(userImage.Content);
+                UserImage.Extention = userImage.Extention;
             }
 
             return new UserData
@@ -66,7 +66,7 @@ namespace Application.SecurityFeatures.Queries
                 UserName = user.UserName,
                 Email = user.Email,
                 Token = _jwtGenerator.CreateToken(user, rolesList),
-                ProfileImage = profileImage ?? null
+                ProfileImage = UserImage ?? null
             };
         }
     }
