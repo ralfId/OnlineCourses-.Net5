@@ -22,7 +22,7 @@ namespace Application.SecurityFeatures.Commands
         public string UserName { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        public ProfileImage UserImage { get; set; }
+        public ProfileImage ProfileImage { get; set; }
     }
 
     public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, UserData>
@@ -58,7 +58,7 @@ namespace Application.SecurityFeatures.Commands
                 throw new HandlerExceptions(HttpStatusCode.InternalServerError, new { message = "This email is in use" });
             }
 
-            if (request.UserImage != null)
+            if (request.ProfileImage != null)
             {
                 var userImage = await _coursesContext.Documents.Where(x => x.ObjectReference == new Guid(user.Id)).FirstOrDefaultAsync();
 
@@ -68,18 +68,18 @@ namespace Application.SecurityFeatures.Commands
                     {
                         DocumentId = Guid.NewGuid(),
                         ObjectReference = new Guid(user.Id),
-                        Name = request.UserImage.Name,
-                        Extention = request.UserImage.Extention,
-                        Content = Convert.FromBase64String(request.UserImage.Data),
+                        Name = request.ProfileImage.Name,
+                        Extention = request.ProfileImage.Extention,
+                        Content = Convert.FromBase64String(request.ProfileImage.Data),
                         CreationDate = DateTime.UtcNow
                     };
                     await _coursesContext.Documents.AddAsync(newUserImage);
                 }
                 else
                 {
-                    userImage.Name = request.UserImage.Name;
-                    userImage.Content = Convert.FromBase64String(request.UserImage.Data);
-                    userImage.Extention = request.UserImage.Extention;
+                    userImage.Name = request.ProfileImage.Name;
+                    userImage.Content = Convert.FromBase64String(request.ProfileImage.Data);
+                    userImage.Extention = request.ProfileImage.Extention;
                 }
             }
 

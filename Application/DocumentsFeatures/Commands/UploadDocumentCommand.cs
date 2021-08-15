@@ -18,7 +18,7 @@ namespace Application.DocumentsFeatures.Commands
         public Guid ObjectReference { get; set; }
         public string Name { get; set; }
         public string Data { get; set; }
-        public string Extenttion { get; set; }
+        public string Extention { get; set; }
     }
 
     public class UploadDocummenCommandHandler : IRequestHandler<UploadDocumentCommand>
@@ -42,7 +42,8 @@ namespace Application.DocumentsFeatures.Commands
                     ObjectReference = request.ObjectReference,
                     Name= request.Name,
                     Content = Convert.FromBase64String(request.Data),
-                    Extention = request.Extenttion
+                    Extention = request.Extention,
+                    CreationDate = DateTime.UtcNow
                 };
 
                 await _coursesContext.Documents.AddAsync(newDoc);
@@ -51,7 +52,7 @@ namespace Application.DocumentsFeatures.Commands
             {
                 userDoc.Name = request.Name;
                 userDoc.Content = Convert.FromBase64String(request.Data);
-                userDoc.Extention = request.Extenttion;
+                userDoc.Extention = request.Extention;
             }
 
             var resp = await _coursesContext.SaveChangesAsync();
