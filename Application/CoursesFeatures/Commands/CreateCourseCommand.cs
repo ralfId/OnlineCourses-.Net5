@@ -14,6 +14,7 @@ namespace Application.CoursesFeatures.Commands
 {
     public class CreateCourseCommand : IRequest
     {
+        public Guid? CourseId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public DateTime PublicationDate { get; set; }
@@ -34,10 +35,16 @@ namespace Application.CoursesFeatures.Commands
         }
         public async Task<Unit> Handle(CreateCourseCommand request, CancellationToken cancellationToken)
         {
+            Guid courseId = Guid.NewGuid();
+
+            if (request.CourseId != null)
+            {
+                courseId = request.CourseId ?? Guid.NewGuid();
+            }
             //create the new course
             var course = new Courses
             {
-                CourseId = Guid.NewGuid(),
+                CourseId = courseId,
                 Title = request.Title,
                 Description = request.Description,
                 PublicationDate = request.PublicationDate,
@@ -69,7 +76,7 @@ namespace Application.CoursesFeatures.Commands
                 Promotion = request.PricePromotion
             };
 
-            _coursesContext.Prices.Add(priceCourse);    
+            _coursesContext.Prices.Add(priceCourse);
 
 
             var resp = await _coursesContext.SaveChangesAsync();

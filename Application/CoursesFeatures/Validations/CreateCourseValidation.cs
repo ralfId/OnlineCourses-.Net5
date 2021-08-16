@@ -12,6 +12,7 @@ namespace Application.CoursesFeatures.Validations
     {
         public CreateCourseValidation()
         {
+            RuleFor(r => r.CourseId).NotEmpty();
             RuleFor(r => r.Title).NotEmpty().WithMessage("{PropertyName} should not be empty ");
             RuleFor(r => r.Description).NotEmpty().WithMessage("{PropertyName} should not be empty ");
             RuleFor(r => r.PublicationDate).NotEmpty().WithMessage("{PropertyName} should not be empty ");
