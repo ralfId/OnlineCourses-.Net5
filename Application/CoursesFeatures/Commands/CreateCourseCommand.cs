@@ -60,7 +60,7 @@ namespace Application.CoursesFeatures.Commands
                 {
                     var coursInst = new CourseInstructor
                     {
-                        CourseId = course.CourseId,
+                        CourseId = courseId,
                         InstructorId = ci
                     };
                     _coursesContext.CourseInstructor.Add(coursInst);
@@ -71,7 +71,7 @@ namespace Application.CoursesFeatures.Commands
             var priceCourse = new Prices
             {
                 PriceId = Guid.NewGuid(),
-                CourseId = course.CourseId,
+                CourseId = courseId,
                 CurrentPrice = request.Price,
                 Promotion = request.PricePromotion
             };
