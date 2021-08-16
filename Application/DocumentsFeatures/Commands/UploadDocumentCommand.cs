@@ -34,7 +34,7 @@ namespace Application.DocumentsFeatures.Commands
         {
             var userDoc = await _coursesContext.Documents.Where(x => x.ObjectReference == request.ObjectReference).FirstOrDefaultAsync();
 
-            if (userDoc != null)
+            if (userDoc == null)
             {
                 var newDoc = new Documents
                 {
