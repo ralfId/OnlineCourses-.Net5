@@ -1,2 +1,4 @@
 -use of Onion arquitecture
 -use cqrs and MediatR 
+-use fluent validation
+-use JWT
