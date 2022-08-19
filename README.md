@@ -11,8 +11,8 @@ stored procedures, JWT, user authentication, Dto classes and more. SQL Server wa
 ![]()
 
 :eight_spoked_asterisk: ASP.NET CORE 5  
-:eight_spoked_asterisk: CQRS 
-:eight_spoked_asterisk: MEDIATR 
-:eight_spoked_asterisk: JWT 
-:eight_spoked_asterisk: ENTITY FRAMEWORK 
-:eight_spoked_asterisk: DAPPER 
+:eight_spoked_asterisk: CQRS  
+:eight_spoked_asterisk: MEDIATR  
+:eight_spoked_asterisk: JWT  
+:eight_spoked_asterisk: ENTITY FRAMEWORK  
+:eight_spoked_asterisk: DAPPER  
