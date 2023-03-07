@@ -37,12 +37,12 @@ namespace Persistence.Repository.Services
                 {
                     parameters.Add("@" + item.Key, item.Value);
                 }
-                parameters.Add("@PageNumber", PageNumber);
-                parameters.Add("@CuantityElements", CuantityElements);
-                parameters.Add("@Order", OrderColumn);
+                parameters.Add("@NumeroPagina", PageNumber);
+                parameters.Add("@CantidadElementos", CuantityElements);
+                parameters.Add("@Ordenamiento", OrderColumn);
                 //output parameters
                 parameters.Add("@TotalRecords", totalRecords, DbType.Int32, ParameterDirection.Output);
-                parameters.Add("@TotalPages", totalPages, DbType.Int32, ParameterDirection.Output);
+                parameters.Add("@TotalPaginas", totalPages, DbType.Int32, ParameterDirection.Output);
 
 
 
@@ -56,7 +56,7 @@ namespace Persistence.Repository.Services
                 /* Create ouput model*/
                 pagination.RecordList = objectsList;
                 //get output parameters
-                pagination.PageNumbers = parameters.Get<int>("@TotalPages");
+                pagination.PageNumbers = parameters.Get<int>("@TotalPaginas");
                 pagination.TotalRecords = parameters.Get<int>("@TotalRecords");
                 /* End to create ouput model*/
 

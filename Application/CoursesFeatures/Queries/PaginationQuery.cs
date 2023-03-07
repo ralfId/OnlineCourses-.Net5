@@ -28,10 +28,10 @@ namespace Application.CoursesFeatures.Queries
         public async Task<PaginationModel> Handle(PaginationQuery request, CancellationToken cancellationToken)
         {
             var parameters = new Dictionary<string, object>();
-            parameters.Add("Title", request.Title);
+            parameters.Add("NombreCurso", request.Title);
 
             return await _paginationRepos.returnPageAsync(
-                "sp_Get_Pagination",
+                "usp_obtener_curso_paginacion",
                 request.PageNumber,
                 request.CuantityElements,
                 parameters,
