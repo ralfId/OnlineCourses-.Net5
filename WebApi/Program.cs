@@ -29,7 +29,7 @@ namespace WebApi
                     var userManager = services.GetRequiredService<UserManager<Users>>();
                     var rolManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                     var dbcontext = services.GetRequiredService<OnlineCoursesContext>();
-                    dbcontext.Database.Migrate();
+                    dbcontext.Database.EnsureCreated();
                     SeedDB.InsertData(dbcontext, userManager, rolManager).Wait();
                 }
                 catch (Exception ex)
